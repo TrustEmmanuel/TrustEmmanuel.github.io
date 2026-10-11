@@ -6,7 +6,7 @@ export const alt = `${profile.name}, ${profile.headline}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Share preview. Name and title on the same warm background as the site.
+// Share preview uses the same midnight and ultraviolet palette as the portfolio.
 export default function OpenGraphImage() {
   return new ImageResponse(
     (
@@ -17,16 +17,32 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          background: "#f3f1ec",
-          color: "#171717",
+          position: "relative",
+          overflow: "hidden",
+          background: "#1c1c35",
+          color: "#ffffff",
           padding: "80px",
         }}
       >
+        <div
+          style={{
+            position: "absolute",
+            top: -240,
+            right: -80,
+            width: 650,
+            height: 650,
+            borderRadius: "50%",
+            border: "1px solid #8272ff",
+          }}
+        />
         <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.05 }}>
           {profile.name}
         </div>
-        <div style={{ marginTop: 24, fontSize: 36, color: "#3f3f46" }}>
+        <div style={{ marginTop: 24, fontSize: 36, color: "#b8adff" }}>
           {profile.headline}
+        </div>
+        <div style={{ marginTop: 28, fontSize: 23, color: "#ff907d" }}>
+          GOOD IDEAS DESERVE GREAT SOFTWARE.
         </div>
       </div>
     ),

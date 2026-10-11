@@ -1,10 +1,6 @@
-// Edit this file to change the words on the site.
-// The header and the Home page read everything from here.
-
 const githubUrl = "https://github.com/TrustEmmanuel";
 const linkedinUrl = "https://www.linkedin.com/in/emmanuel-udeka/";
 const emailAddress = "udekaem@gmail.com";
-// Replace this with the public site URL when the portfolio is deployed.
 const basePath = "/portfolio";
 const siteUrl = `https://trustemmanuel.github.io${basePath}`;
 
@@ -17,30 +13,28 @@ export const profile = {
   photo: `${basePath}/images/emmanuel-udeka.jpg`,
   photoAlt: "Portrait of Emmanuel Udeka",
   bio: "I'm Emmanuel, a software and product developer with 6 years of experience building software and fintech products. I turn ideas into secure, reliable web and mobile apps.",
-  about: {
-    title: "About me",
-    // Hidden on the page until this bracket text is replaced.
-    paragraph: "[YOUR ABOUT PARAGRAPH]",
-    offersTitle: "What I offer:",
-    offers: [
-      "Full-stack web apps (Next.js, TypeScript, Java)",
-      "Mobile apps (React Native)",
-      "Payment API Integration",
-      "Email integration (Mailgun)",
-      "Databases: MySQL, PostgreSQL, Supabase",
-      "Google sign-in and user accounts",
-    ],
-    closing: "Message me, let's start building.",
-  },
+  email: emailAddress,
+  nav: [
+    { label: "Home", href: "/" },
+    { label: "Featured projects", href: "/projects" },
+    { label: "Contact", href: "/contact" },
+  ],
+  socials: [
+    { label: "GitHub", href: githubUrl },
+    { label: "LinkedIn", href: linkedinUrl },
+  ],
   stats: [
     { value: "6+", label: "Years" },
     { value: "19", label: "Projects" },
-    { value: "Resume", href: "#resume", linkLabel: "View resume" },
+    { value: "Full stack web applications", label: "Focus" },
   ],
-  stackTitle: "Tech Stack",
+  about: {
+    paragraph:
+      "I'm a software and product developer with six years of experience building software and fintech products. I turn ideas into secure, reliable web and mobile apps.",
+  },
   stack: [
     {
-      category: "Frontend & Mobile",
+      category: "FRONTEND & MOBILE",
       items: [
         "JavaScript",
         "TypeScript",
@@ -53,116 +47,30 @@ export const profile = {
       ],
     },
     {
-      category: "Backend",
-      items: ["Java", "Node.js (TypeScript)"],
+      category: "BACKEND & DATA",
+      items: ["Java", "Node.js", "MySQL", "PostgreSQL", "Supabase"],
     },
     {
-      category: "Databases",
-      items: ["MySQL", "PostgreSQL", "Supabase"],
-    },
-    {
-      category: "Auth & Security",
+      category: "AUTH & SECURITY",
       items: [
         "OAuth 2.0",
         "OpenID Connect",
         "JWT",
         "Google Sign-In",
-        "Supabase Auth",
         "Role-Based Access Control",
-        "API Key Authentication",
       ],
     },
     {
-      category: "Payments & Email",
-      items: ["Payment API Integration", "Mailgun"],
-    },
-    {
-      category: "Version Control & Deployment",
-      items: ["Git and GitHub", "Vercel", "Netlify"],
-    },
-    {
-      category: "Tools",
-      items: ["Cursor", "VS Code", "IntelliJ IDEA", "Postman"],
+      category: "PAYMENTS & DELIVERY",
+      items: ["Payment API Integration", "Mailgun", "Git", "GitHub", "Vercel", "Netlify"],
     },
   ],
-  servicesTitle: "Services",
   services: [
-    {
-      title: "Web and Mobile Application Development",
-      description: "",
-    },
-    {
-      title: "Product Management and Consultancy",
-      description: "",
-    },
-    {
-      title: "Payment, Banking and Fintech Integration",
-      description: "",
-    },
-    {
-      title: "Enterprise Application Integration and Support",
-      description: "",
-    },
-    {
-      title: "Business and IT Consultancy",
-      description: "",
-    },
+    "Web and mobile application development",
+    "Product management and consultancy",
+    "Payment, banking and fintech integration",
+    "Enterprise application integration and support",
   ],
-  nav: [
-    { label: "Home", href: "/" },
-    { label: "Featured projects", href: "/projects" },
-    { label: "Contact", href: "/contact" },
-  ],
-  email: emailAddress,
-  actions: [
-    { label: "Get in touch", href: `mailto:${emailAddress}`, variant: "primary" },
-    { label: "View my work", href: "/projects", variant: "secondary" },
-    { label: "GitHub", href: githubUrl, variant: "secondary" },
-  ],
-  socials: [
-    { label: "GitHub", href: githubUrl },
-    { label: "LinkedIn", href: linkedinUrl },
-  ],
-  github: {
-    url: githubUrl,
-    title: "Find me on GitHub",
-    text: "Code and project work live on my GitHub profile.",
-    button: "View GitHub",
-  },
-  resume: {
-    title: "Resume",
-    text: "View my resume. My experience speaks for itself.",
-    downloadLabel: "Download resume",
-    downloadHref: `${basePath}/resume.pdf`,
-    downloadName: "Emmanuel_Udeka_Resume.pdf",
-    experienceTitle: "Experience",
-    educationTitle: "Education",
-  },
-  // Replace these placeholder entries with your own. They are not real jobs or schools.
-  experience: [
-    {
-      role: "[Role]",
-      company: "[Company]",
-      dates: "[Start – End]",
-      summary: "[Replace with what you did in this role]",
-    },
-  ],
-  education: [
-    {
-      school: "[School]",
-      credential: "[Credential]",
-      dates: "[Start – End]",
-    },
-  ],
-  featured: {
-    title: "Featured projects",
-    allLabel: "View all projects",
-    href: "/projects",
-  },
-  cta: {
-    title: "Let's work together",
-    button: "Get in touch",
-  },
 } as const;
 
 export type ProjectNote = {
@@ -174,9 +82,10 @@ export type Project = {
   title: string;
   summary: string;
   description: string;
-  audience: string;
+  audience?: string;
   tech: string[];
   image: string;
+  mockup: "bloom" | "market" | "mono" | "orbit";
   liveUrl?: string;
   githubUrl?: string;
   featured: boolean;
@@ -184,23 +93,16 @@ export type Project = {
   storyOnHome?: boolean;
   showOnHome?: boolean;
   highlightOnHome?: boolean;
-  layout?: "showcase";
 };
-
-// Bracket text is a blank to fill in. Those entries stay off the page.
-export function isUnfilled(value: string) {
-  return value.includes("[");
-}
 
 export const projects: Project[] = [
   {
     title: "PetroVault",
     summary: "Materials control from the supply base to the wellhead.",
     description:
-      "An inventory workspace for tubulars, MRO, chemicals, and serialized assets across U.S. Gulf and onshore stock. The Inventory Officer moves stock. Procurement holds valuations, repurchase decisions, and the compliance register.",
-    audience:
-      "The yard receives, issues, and transfers. Procurement sees value and certification, and approves repurchase. Each person is refused the other job.",
+      "PetroVault is a web-based inventory management tool for upstream oil and gas teams. It gives the Inventory Officer one place to monitor materials such as drilling consumables, spares, and chemicals, so stock levels stay accurate and shortages or over-ordering are caught early. It is hosted on Netlify and works on desktop and mobile, so it can be used in the office or in the field.",
     tech: ["TypeScript", "React", "Vite", "Tailwind CSS", "Zod"],
+    mockup: "bloom",
     caseStudy: [
       {
         label: "The job",
@@ -234,10 +136,9 @@ export const projects: Project[] = [
     title: "TajMart",
     summary: "Groceries for the way Lagos cooks.",
     description:
-      "A neighborhood grocery for Nigerian kitchens. Google sign-in keeps the basket with the shopper. Delivery is paid by transfer or cash, and a failed receipt email does not drop the order.",
-    audience:
-      "A shopper builds a basket and leaves a delivery address. Sign-in is how the basket and the receipt stay attached to them.",
+      "TajMart is an e-commerce grocery storefront built for Nigerian shoppers. It lets customers browse and order familiar staples like garri, Indomie, Peak milk, Coca-Cola, and bread, plus household essentials, for delivery in Lagos. It has a deep green brand look and is built to work on mobile, where most grocery shopping happens.",
     tech: ["JavaScript", "React", "Vite", "Supabase", "Google Sign-In", "Mailgun"],
+    mockup: "market",
     caseStudy: [
       {
         label: "The job",
@@ -269,10 +170,11 @@ export const projects: Project[] = [
     title: "Oakwood",
     summary: "A specimen treasury for dollars, sterling, and naira.",
     description:
-      "A corporate banking workspace for a treasurer. Wires, batches, bills, and credit movements settle on a ledger that stays in the browser.",
+      "A multi-currency banking platform for Oakwood Finance.",
     audience:
-      "The treasurer funds a payment from an available balance and authorizes it with a PIN. The specimen writes the receipt. Nothing leaves the browser.",
+      "Authorize single, multiple, and bulk payments, pay bills, and download receipts from a client-side ledger in USD, GBP, and NGN.",
     tech: ["JavaScript", "React", "Vite", "Tailwind CSS"],
+    mockup: "orbit",
     caseStudy: [
       {
         label: "The job",
@@ -296,7 +198,6 @@ export const projects: Project[] = [
       },
     ],
     image: `${basePath}/images/oakwood.png`,
-    layout: "showcase",
     githubUrl: "https://github.com/TrustEmmanuel/oakwood-banking-management-system",
     featured: true,
     showOnHome: true,
@@ -304,6 +205,10 @@ export const projects: Project[] = [
     storyOnHome: true,
   },
 ];
+
+export function isUnfilled(value: string) {
+  return value.includes("[");
+}
 
 export function readyProjects() {
   return projects.filter(

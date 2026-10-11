@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { profile } from "@/lib/profile";
 
 // Opens the message form in a popup. Used by the Get in touch buttons.
@@ -18,7 +19,12 @@ export function GetInTouch({
       <button type="button" className={className} onClick={() => setOpen(true)}>
         {label}
       </button>
-      {open ? <MessageDialog onClose={() => setOpen(false)} /> : null}
+      {open
+        ? createPortal(
+            <MessageDialog onClose={() => setOpen(false)} />,
+            document.body,
+          )
+        : null}
     </>
   );
 }
@@ -59,14 +65,14 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-zinc-950/40 p-4 sm:items-center"
+      className="message-dialog-backdrop fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
       onClick={onClose}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="message-title"
-        className="w-full max-w-md rounded-3xl bg-white p-6 shadow-xl"
+        className="message-dialog w-full max-w-md rounded-3xl p-6"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4">
@@ -82,7 +88,7 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
             Close
           </button>
         </div>
-        <form onSubmit={onSubmit} className="mt-5">
+        <form onSubmit={onSubmit} className="mt-4">
           <label className="block text-sm text-zinc-600" htmlFor="message-name">
             Your name
           </label>
@@ -91,7 +97,7 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
             name="name"
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="mt-1 w-full rounded-2xl border border-zinc-200 bg-[#f3f1ec] px-4 py-3 text-sm text-zinc-950 outline-none focus:border-zinc-950"
+            className="message-input mt-1 w-full rounded-2xl px-4 py-3 text-sm outline-none"
           />
           <label className="mt-3 block text-sm text-zinc-600" htmlFor="message-email">
             Your email
@@ -102,7 +108,7 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
             type="email"
             value={from}
             onChange={(event) => setFrom(event.target.value)}
-            className="mt-1 w-full rounded-2xl border border-zinc-200 bg-[#f3f1ec] px-4 py-3 text-sm text-zinc-950 outline-none focus:border-zinc-950"
+            className="message-input mt-1 w-full rounded-2xl px-4 py-3 text-sm outline-none"
           />
           <label className="mt-3 block text-sm text-zinc-600" htmlFor="message-body">
             What do you want to build?
@@ -111,18 +117,18 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
             id="message-body"
             name="message"
             required
-            rows={4}
+            rows={3}
             value={message}
             onChange={(event) => {
               setMessage(event.target.value);
               if (error) setError("");
             }}
-            className="mt-1 w-full resize-y rounded-2xl border border-zinc-200 bg-[#f3f1ec] px-4 py-3 text-sm leading-6 text-zinc-950 outline-none focus:border-zinc-950"
+            className="message-input mt-1 w-full resize-y rounded-2xl px-4 py-3 text-sm leading-6 outline-none"
           />
           {error ? <p className="mt-2 text-sm text-red-700">{error}</p> : null}
           <button
             type="submit"
-            className="mt-4 inline-flex h-12 items-center justify-center rounded-full bg-zinc-950 px-6 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
+            className="button button-primary mt-4"
           >
             Send
           </button>

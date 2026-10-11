@@ -4,7 +4,7 @@ export const dynamic = "force-static";
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
-// Tab icon. Initials on the same warm background as the site.
+// The EU monogram carries the portfolio's ultraviolet identity.
 export default function Icon() {
   return new ImageResponse(
     (
@@ -15,8 +15,9 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#f3f1ec",
-          color: "#171717",
+          borderRadius: 8,
+          background: "#6754f5",
+          color: "#ffffff",
           fontSize: 14,
           fontWeight: 700,
         }}

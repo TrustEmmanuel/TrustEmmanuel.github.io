@@ -1,152 +1,118 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { GetInTouch } from "@/components/MessageBox";
 import { ProjectCard } from "@/components/ProjectCard";
 import { ResumeDownload } from "@/components/ResumeDownload";
-import { isUnfilled, profile, readyProjects } from "@/lib/profile";
+import { profile, readyProjects } from "@/lib/profile";
 
-const primaryButton =
-  "inline-flex h-12 items-center justify-center rounded-full bg-zinc-950 px-6 text-sm font-medium text-white transition-colors hover:bg-zinc-800";
-const secondaryButton =
-  "inline-flex h-12 items-center justify-center rounded-full bg-white px-6 text-sm font-medium text-zinc-950 ring-1 ring-zinc-200 transition-colors hover:bg-zinc-50";
+const projects = readyProjects().filter((project) => project.showOnHome);
 
-const pill =
-  "rounded-full bg-[#f3f1ec] px-3 py-1 text-sm text-zinc-800";
-
-const card =
-  "rounded-3xl bg-white shadow-[0_1px_2px_rgba(22,22,22,0.04)]";
-
-// app/page.tsx is the Home route. The URL is /.
 export default function HomePage() {
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-14 px-5 pb-16 pt-6 sm:px-6 md:gap-20 md:pt-10">
+    <div className="site-shell">
       <Hero />
+      <ProofPoints />
       <About />
-      <TechStack />
-      <Services />
-      <FeaturedProjects />
-      <GitHub />
+      <Skills />
+      <SelectedWork />
       <Resume />
-      <CallToAction />
+      <Contact />
     </div>
   );
 }
 
+function Eyebrow({ children }: { children: ReactNode }) {
+  return <p className="eyebrow">{children}</p>;
+}
+
 function Hero() {
   return (
-    <section className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-16">
-      <div>
-        <div className="flex items-center gap-4">
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="hero-copy">
+        <div className="hero-profile">
           <Image
             src={profile.photo}
             alt={profile.photoAlt}
-            width={128}
-            height={128}
+            width={88}
+            height={88}
             priority
-            className="h-16 w-16 rounded-2xl object-cover shadow-sm"
+            className="hero-portrait"
           />
           <div>
-            <p className="text-sm text-zinc-600">{profile.greeting}</p>
-            <p className="mt-1 flex items-center gap-2 text-sm text-zinc-800">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden />
+            <p className="hero-greeting">{profile.greeting}</p>
+            <p className="availability">
+              <span className="availability-dot" aria-hidden="true" />
               {profile.badge}
             </p>
           </div>
         </div>
-        <h1 className="mt-8 max-w-xl font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
-          {profile.headline}
+        <h1 id="hero-title">
+          Full-Stack
+          <br />
+          <span className="hero-last-line">Developer.</span>
         </h1>
-        <p className="mt-5 max-w-xl text-base leading-7 text-zinc-600 sm:text-lg sm:leading-8">
-          {profile.bio}
-        </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          {profile.actions.map((action) => {
-            const className =
-              action.variant === "primary" ? primaryButton : secondaryButton;
-            const external =
-              action.href.startsWith("http") || action.href.startsWith("mailto:");
+        <p className="hero-intro">{profile.bio}</p>
+        <div className="hero-actions">
+          <GetInTouch className="button button-primary" label="Get in touch" />
+          <Link href="/projects" className="button button-outline">
+            View my work <span aria-hidden="true">↗</span>
+          </Link>
+          <a
+            className="button button-outline"
+            href={profile.socials[0].href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div className="hero-note"><span /> Building great products for both web and mobile</div>
+      </div>
+      <HeroArtwork />
+      <div className="hero-index" aria-hidden="true">PORTFOLIO — 2026</div>
+    </section>
+  );
+}
 
-            if (action.href.startsWith("mailto:")) {
-              return (
-                <GetInTouch
-                  key={action.label}
-                  className={className}
-                  label={action.label}
-                />
-              );
-            }
-
-            if (external) {
-              return (
-                <a
-                  key={action.href}
-                  href={action.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={className}
-                >
-                  {action.label}
-                </a>
-              );
-            }
-
-            return (
-              <Link key={action.href} href={action.href} className={className}>
-                {action.label}
-              </Link>
-            );
-          })}
+function HeroArtwork() {
+  return (
+    <div className="hero-art" role="img" aria-label="Illustrated software dashboard">
+      <div className="art-orbit orbit-one" />
+      <div className="art-orbit orbit-two" />
+      <div className="art-spark spark-one">✳</div>
+      <div className="art-spark spark-two">✦</div>
+      <div className="art-chip chip-code"><span>&lt;/&gt;</span> building products</div>
+      <div className="art-dashboard">
+        <div className="art-windowbar"><span /><span /><span /><b>product / overview</b><i>•••</i></div>
+        <div className="art-windowbody">
+          <div className="art-rail"><strong>EU</strong><span className="rail-selected">⌂</span><span>▤</span><span>◉</span><span>⚙</span></div>
+          <div className="art-content">
+            <div className="art-greeting"><div><small>PRODUCT ENGINEERING</small><b>Ideas into reliable software.</b></div><span>EU</span></div>
+            <div className="art-summary">
+              <div><small>AREAS OF FOCUS</small><strong>Full stack<span>↗</span></strong><p>Web · mobile · fintech</p></div>
+              <div className="art-activity"><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /></div>
+            </div>
+            <div className="art-task"><span className="task-icon">✳</span><div><small>THE APPROACH</small><b>Make the complex feel simple</b></div><span className="task-arrow">↗</span></div>
+          </div>
         </div>
       </div>
+      <div className="art-floating-note"><span className="note-icon">✦</span><span><b>Thoughtful by design</b><small>Built with people in mind.</small></span></div>
+      <div className="art-sticker">CURIOUS<br />BY NATURE<span>↘</span></div>
+    </div>
+  );
+}
 
-      <ul className="grid grid-cols-3 gap-3 lg:grid-cols-1">
-        {profile.stats.map((stat) => {
-          const body = (
-            <>
-              <p className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">
-                {stat.value}
-              </p>
-              {"label" in stat ? (
-                <p className="mt-1 text-xs text-zinc-600 sm:text-sm">
-                  {stat.label}
-                </p>
-              ) : null}
-            </>
-          );
-          const className =
-            "rounded-2xl bg-white px-3 py-4 shadow-[0_1px_2px_rgba(22,22,22,0.04)] sm:px-5 lg:py-5";
-
-          if ("href" in stat) {
-            return (
-              <li key={stat.value}>
-                <a href={stat.href} className={`block h-full ${className}`}>
-                  {body}
-                  {"linkLabel" in stat ? (
-                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-zinc-950">
-                      {stat.linkLabel}
-                      <svg
-                        viewBox="0 0 16 16"
-                        aria-hidden="true"
-                        className="h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      >
-                        <path d="M3 8h10M9 4l4 4-4 4" />
-                      </svg>
-                    </span>
-                  ) : null}
-                </a>
-              </li>
-            );
-          }
-
-          return (
-            <li key={stat.label} className={className}>
-              {body}
-            </li>
-          );
-        })}
+function ProofPoints() {
+  return (
+    <section className="proof-strip" aria-label="Experience at a glance">
+      <ul>
+        {profile.stats.map((stat) => (
+          <li key={stat.label}>
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+          </li>
+        ))}
       </ul>
     </section>
   );
@@ -154,106 +120,72 @@ function Hero() {
 
 function About() {
   return (
-    <section>
-      <h2 className="font-display text-2xl font-semibold tracking-tight">
-        {profile.about.title}
-      </h2>
-      <div className={`mt-5 p-6 sm:p-8 ${card}`}>
-        {isUnfilled(profile.about.paragraph) ? null : (
-          <p className="max-w-2xl text-base leading-7 text-zinc-600">
-            {profile.about.paragraph}
+    <section className="about-section section-space" id="about">
+      <div className="about-topline">
+        <Eyebrow>01 / THE WAY I BUILD</Eyebrow>
+        <span>GOOD PRODUCTS START WITH GOOD QUESTIONS</span>
+      </div>
+      <div className="about-main">
+        <h2>
+          I make the
+          <br />
+          complicated
+          <br />
+          <span>feel clear.</span>
+        </h2>
+        <div className="about-copy">
+          <p className="about-lede">{profile.about.paragraph}</p>
+          <p className="about-detail">
+            My work spans full-stack web and mobile apps, fintech integrations,
+            authentication, payments, and the product details that help software
+            feel dependable.
           </p>
-        )}
-        <h3
-          className={`text-sm font-medium text-zinc-950 ${isUnfilled(profile.about.paragraph) ? "" : "mt-6"}`}
-        >
-          {profile.about.offersTitle}
-        </h3>
-        <ul className="mt-3 max-w-2xl list-disc space-y-2 pl-5 text-base leading-7 text-zinc-600">
-          {profile.about.offers.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-        <p className="mt-6 text-base font-medium text-zinc-950">
-          {profile.about.closing}
-        </p>
+          <Link href="#skills" className="underlined-link">
+            Explore my technical toolkit <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
+      </div>
+      <div className="about-principles">
+        <article>
+          <span>01</span>
+          <h3>Understand the workflow</h3>
+          <p>Start with the people, constraints, and problem behind the brief.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Build for confidence</h3>
+          <p>Make complex journeys clear, reliable, and secure.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Stay end to end</h3>
+          <p>Bring product thinking and engineering together through delivery.</p>
+        </article>
       </div>
     </section>
   );
 }
 
-function TechStack() {
+function SelectedWork() {
   return (
-    <section>
-      <h2 className="font-display text-2xl font-semibold tracking-tight">
-        {profile.stackTitle}
-      </h2>
-      <ul className={`mt-5 divide-y divide-zinc-200 ${card}`}>
-        {profile.stack.map((group) => (
-          <li
-            key={group.category}
-            className="flex flex-col gap-3 px-6 py-5 sm:flex-row sm:items-start"
-          >
-            <p className="shrink-0 text-sm text-zinc-600 sm:w-64">{group.category}</p>
-            <ul className="flex flex-wrap gap-2">
-              {group.items.map((item) => (
-                <li key={item} className={pill}>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-function Services() {
-  return (
-    <section>
-      <h2 className="font-display text-2xl font-semibold tracking-tight">
-        {profile.servicesTitle}
-      </h2>
-      <ul className={`mt-5 grid gap-2 p-6 sm:grid-cols-2 ${card}`}>
-        {profile.services.map((service) => (
-          <li key={service.title} className={`${pill} w-fit`}>
-            {service.title}
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-function FeaturedProjects() {
-  const items = readyProjects().filter((project) => project.showOnHome);
-
-  if (items.length === 0) {
-    return null;
-  }
-
-  return (
-    <section>
-      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <h2 className="font-display text-2xl font-semibold tracking-tight">
-          {profile.featured.title}
-        </h2>
-        <Link
-          href={profile.featured.href}
-          className="text-sm font-medium text-zinc-950 underline decoration-zinc-300 underline-offset-4 hover:decoration-zinc-950"
-        >
-          {profile.featured.allLabel}
+    <section className="work-section section-space" id="work">
+      <div className="work-heading">
+        <div className="section-head">
+          <Eyebrow>03 / A FEW THINGS I’VE MADE</Eyebrow>
+          <h2>Ideas, meet <span>execution.</span></h2>
+        </div>
+        <Link href="/projects" className="button button-outline">
+          All projects <span aria-hidden="true">↗</span>
         </Link>
       </div>
-      <div className="mt-5 flex flex-col gap-6">
-        {items.map((project, index) => (
+      <div className="project-list">
+        {projects.map((project, index) => (
           <ProjectCard
             key={project.title}
             project={project}
             imageFirst={index % 2 === 1}
-            showStory={project.storyOnHome === true}
-            highlight={project.highlightOnHome === true}
+            highlight={index === 0}
+            projectNumber={index + 1}
             zoomOnHover
           />
         ))}
@@ -262,124 +194,70 @@ function FeaturedProjects() {
   );
 }
 
-function GitHub() {
+function Skills() {
   return (
-    <section className={`flex flex-col items-start gap-6 p-7 sm:p-8 ${card}`}>
-      <div>
-        <h2 className="font-display text-2xl font-semibold tracking-tight">
-          {profile.github.title}
+    <section className="skills-section section-space" id="skills">
+      <div className="section-head">
+        <Eyebrow>02 / HOW I CAN HELP</Eyebrow>
+        <h2>
+          From first idea
+          <br />
+          <span>to working product.</span>
         </h2>
-        <p className="mt-2 max-w-md text-zinc-600">{profile.github.text}</p>
       </div>
-      <a
-        href={profile.github.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={primaryButton}
-      >
-        {profile.github.button}
-      </a>
+      <div className="skills-content">
+        <p>Full-stack, mobile, and fintech product work backed by a practical toolkit.</p>
+        <ul className="service-list">
+          {profile.services.map((service) => (
+            <li key={service}>{service}</li>
+          ))}
+        </ul>
+        <ul className="skill-groups">
+          {profile.stack.map((group) => (
+            <li key={group.category}>
+              <span>{group.category}</span>
+              <div>{group.items.map((item) => <span className="skill-pill" key={item}>{item}</span>)}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
 
 function Resume() {
   return (
-    <section id="resume" className="scroll-mt-24">
-      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h2 className="font-display text-2xl font-semibold tracking-tight">
-            {profile.resume.title}
-          </h2>
-          <p className="mt-2 max-w-md text-zinc-600">{profile.resume.text}</p>
-        </div>
-        <ResumeDownload
-          href={profile.resume.downloadHref}
-          label={profile.resume.downloadLabel}
-          fileName={profile.resume.downloadName}
-          className={primaryButton}
-        />
+    <section className="resume-panel section-space" id="resume">
+      <div className="section-head">
+        <h2>Resume</h2>
       </div>
-
-      <ResumeLists />
+      <ResumeDownload
+        href="/portfolio/resume.pdf"
+        label="View / download résumé"
+        fileName="Emmanuel_Udeka_Resume.pdf"
+        className="button button-primary"
+      />
     </section>
   );
 }
 
-function ResumeLists() {
-  const experience = profile.experience.filter(
-    (item) =>
-      !isUnfilled(item.role) &&
-      !isUnfilled(item.company) &&
-      !isUnfilled(item.dates) &&
-      !isUnfilled(item.summary),
-  );
-  const education = profile.education.filter(
-    (item) =>
-      !isUnfilled(item.credential) &&
-      !isUnfilled(item.school) &&
-      !isUnfilled(item.dates),
-  );
-
-  if (experience.length === 0 && education.length === 0) {
-    return null;
-  }
-
+function Contact() {
   return (
-    <div className="mt-5 grid gap-3 lg:grid-cols-2">
-      {experience.length > 0 ? (
-        <div className={`p-6 sm:p-8 ${card}`}>
-          <h3 className="text-sm text-zinc-600">
-            {profile.resume.experienceTitle}
-          </h3>
-          <ul className="mt-4 space-y-6">
-            {experience.map((item) => (
-              <li key={item.role}>
-                <p className="font-display text-xl font-semibold tracking-tight">
-                  {item.role}
-                </p>
-                <p className="mt-1 text-sm text-zinc-600">
-                  {item.company} · {item.dates}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-zinc-600">
-                  {item.summary}
-                </p>
-              </li>
-            ))}
-          </ul>
+    <section className="contact-panel section-space" id="contact">
+      <div className="contact-shape" aria-hidden="true" />
+      <Eyebrow>05 / GET IN TOUCH</Eyebrow>
+      <div className="contact-content">
+        <h2>
+          Let’s make
+          <br />
+          <span>what’s next.</span>
+        </h2>
+        <div className="contact-action">
+          <p>Have a product to build or a technical challenge to solve? Let’s build.</p>
+          <GetInTouch className="button button-light" label="Let’s build" />
         </div>
-      ) : null}
-      {education.length > 0 ? (
-        <div className={`p-6 sm:p-8 ${card}`}>
-          <h3 className="text-sm text-zinc-600">
-            {profile.resume.educationTitle}
-          </h3>
-          <ul className="mt-4 space-y-6">
-            {education.map((item) => (
-              <li key={item.school}>
-                <p className="font-display text-xl font-semibold tracking-tight">
-                  {item.credential}
-                </p>
-                <p className="mt-1 text-sm text-zinc-600">
-                  {item.school} · {item.dates}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-function CallToAction() {
-  return (
-    <section className={`flex flex-col items-start justify-between gap-6 px-7 py-8 sm:flex-row sm:items-center sm:px-8 ${card}`}>
-      <h2 className="font-display text-3xl font-semibold tracking-tight">
-        {profile.cta.title}
-      </h2>
-      <GetInTouch className={primaryButton} label={profile.cta.button} />
+      </div>
+      <span className="contact-signoff">GOOD THINGS START SOMEWHERE ✳</span>
     </section>
   );
 }
-
