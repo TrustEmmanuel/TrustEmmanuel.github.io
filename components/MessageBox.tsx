@@ -34,6 +34,8 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
   const [from, setFrom] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -44,8 +46,11 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    if (formData.get("_honey")) return;
+
     const text = message.trim();
 
     if (!text) {
@@ -53,14 +58,44 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
       return;
     }
 
-    const subject = encodeURIComponent(`Message for ${profile.name}`);
-    const details = [
-      name.trim() ? `Name: ${name.trim()}` : "",
-      from.trim() ? `Email: ${from.trim()}` : "",
-    ].filter(Boolean);
-    const body = encodeURIComponent([...details, text].join("\n\n"));
+    setSending(true);
+    setError("");
 
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${profile.email}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: from.trim(),
+          message: text,
+          _subject: `Portfolio message for ${profile.name}`,
+          _honey: String(formData.get("_honey") ?? ""),
+        }),
+      });
+      const result: { success?: boolean | string; message?: string } =
+        await response.json();
+
+      if (
+        !response.ok ||
+        (result.success !== true && result.success !== "true")
+      ) {
+        throw new Error(result.message || "The message could not be sent.");
+      }
+
+      setSent(true);
+    } catch (submissionError) {
+      setError(
+        submissionError instanceof Error
+          ? submissionError.message
+          : "The message could not be sent. Please try again.",
+      );
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -89,12 +124,25 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
           </button>
         </div>
         <form onSubmit={onSubmit} className="mt-4">
+          <label className="sr-only" htmlFor="message-website">
+            Leave this field empty
+          </label>
+          <input
+            id="message-website"
+            name="_honey"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            className="sr-only"
+            aria-hidden="true"
+          />
           <label className="block text-sm text-zinc-600" htmlFor="message-name">
             Your name
           </label>
           <input
             id="message-name"
             name="name"
+            required
             value={name}
             onChange={(event) => setName(event.target.value)}
             className="message-input mt-1 w-full rounded-2xl px-4 py-3 text-sm outline-none"
@@ -106,6 +154,7 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
             id="message-email"
             name="email"
             type="email"
+            required
             value={from}
             onChange={(event) => setFrom(event.target.value)}
             className="message-input mt-1 w-full rounded-2xl px-4 py-3 text-sm outline-none"
@@ -125,12 +174,18 @@ function MessageDialog({ onClose }: { onClose: () => void }) {
             }}
             className="message-input mt-1 w-full resize-y rounded-2xl px-4 py-3 text-sm leading-6 outline-none"
           />
-          {error ? <p className="mt-2 text-sm text-red-700">{error}</p> : null}
+          {error ? <p role="alert" className="mt-2 text-sm text-red-700">{error}</p> : null}
+          {sent ? (
+            <p role="status" className="mt-3 text-sm text-emerald-700">
+              Your message has been sent. Thanks for reaching out!
+            </p>
+          ) : null}
           <button
             type="submit"
-            className="button button-primary mt-4"
+            className="button button-primary mt-4 disabled:cursor-wait disabled:opacity-70"
+            disabled={sending || sent}
           >
-            Send
+            {sending ? "Sending…" : sent ? "Message sent" : "Send"}
           </button>
         </form>
       </div>
