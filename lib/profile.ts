@@ -198,6 +198,7 @@ export const projects: Project[] = [
       },
     ],
     image: `${basePath}/images/oakwood.png`,
+    liveUrl: "https://oakwood-banking-management-system.netlify.app/",
     githubUrl: "https://github.com/TrustEmmanuel/oakwood-banking-management-system",
     featured: true,
     showOnHome: true,
